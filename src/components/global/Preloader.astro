@@ -1,0 +1,67 @@
+---
+import Logo from '../ui/Logo.astro';
+---
+
+<div class="preloader" aria-hidden="true" data-preloader>
+  <div class="preloader__curtain" data-preloader-curtain></div>
+  <div class="preloader__inner">
+    <Logo variant="symbol" class="preloader__logo" title="" />
+    <div class="preloader__bar"><span data-preloader-bar></span></div>
+  </div>
+</div>
+
+<style>
+  .preloader {
+    display: none;
+  }
+
+  :global(.js) .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    display: grid;
+    place-items: center;
+    background: var(--sf-black);
+  }
+
+  :global(.js.preloader-done) .preloader {
+    display: none;
+  }
+
+  .preloader__curtain {
+    position: absolute;
+    inset: -10% 0;
+    background: var(--sf-yellow);
+    transform: translateY(110%) skewY(-4deg);
+  }
+
+  .preloader__inner {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 2rem;
+  }
+
+  .preloader__inner :global(.preloader__logo) {
+    width: clamp(120px, 26vw, 200px);
+  }
+
+  .preloader__inner :global(.preloader__logo path) {
+    stroke-width: 6;
+  }
+
+  .preloader__bar {
+    width: clamp(140px, 30vw, 220px);
+    height: 3px;
+    background: var(--sf-line);
+    overflow: hidden;
+  }
+
+  .preloader__bar span {
+    display: block;
+    height: 100%;
+    background: var(--sf-yellow);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+</style>

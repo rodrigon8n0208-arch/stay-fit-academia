@@ -1,0 +1,83 @@
+---
+import { MARQUEE_WORDS } from '../../data/site';
+const words = [...MARQUEE_WORDS, ...MARQUEE_WORDS];
+---
+
+<div class="marquee-wrap" aria-hidden="true">
+<div class="marquee" data-marquee>
+  <div class="marquee__skew" data-marquee-skew>
+    <div class="marquee__track" data-marquee-track>
+      {
+        [0, 1].map(() => (
+          <div class="marquee__group">
+            {words.map((w, i) => (
+              <span class:list={['marquee__word', { 'marquee__word--outline': i % 2 === 1 }]}>
+                {w}
+                <i class="marquee__sep" />
+              </span>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+</div>
+
+<style>
+  .marquee-wrap {
+    overflow-x: clip;
+    padding-block: 1.5rem;
+  }
+
+  .marquee {
+    position: relative;
+    z-index: 2;
+    padding-block: clamp(1.5rem, 4vw, 3rem);
+    overflow: hidden;
+    background: var(--sf-yellow);
+    color: var(--sf-on-accent);
+    transform: rotate(-2deg) scale(1.04);
+  }
+
+  .marquee__skew {
+    will-change: transform;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .marquee__group {
+    display: flex;
+    flex: none;
+  }
+
+  .marquee__word {
+    display: inline-flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem);
+    padding-right: clamp(1.25rem, 3vw, 2.5rem);
+    font-size: clamp(2.2rem, 1.2rem + 5vw, 6rem);
+    font-weight: 900;
+    font-stretch: 125%;
+    text-transform: uppercase;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  .marquee__word--outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--sf-on-accent);
+  }
+
+  .marquee__sep {
+    display: inline-block;
+    width: 0.55em;
+    height: 0.2em;
+    background: var(--sf-black);
+    transform: skewX(var(--slant));
+  }
+</style>

@@ -1,0 +1,152 @@
+---
+// Elementos globais: barra de progresso de rolagem, botão flutuante de WhatsApp e cursor customizado.
+import Icon from '../ui/Icon.astro';
+import { whatsappUrl } from '../../data/site';
+---
+
+<div class="progress" aria-hidden="true"><span data-progress></span></div>
+
+<a
+  href={whatsappUrl('Olá! Vim pelo site e quero saber mais sobre a Stay Fit.')}
+  class="wa-float"
+  target="_blank"
+  rel="noopener"
+  aria-label="Conversar no WhatsApp"
+  data-wa-float
+>
+  <Icon name="whatsapp" />
+</a>
+
+<div class="cursor is-hidden" aria-hidden="true" data-cursor>
+  <span class="cursor__dot" data-cursor-dot></span>
+  <span class="cursor__ring" data-cursor-ring></span>
+</div>
+
+<style>
+  .progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 101;
+    height: 3px;
+    pointer-events: none;
+  }
+
+  .progress span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--sf-yellow), var(--sf-yellow-hot));
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  /* ---------- WhatsApp flutuante ---------- */
+
+  .wa-float {
+    position: fixed;
+    right: max(1rem, env(safe-area-inset-right));
+    bottom: max(1rem, env(safe-area-inset-bottom));
+    z-index: 90;
+    width: 60px;
+    height: 60px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: #25d366;
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .wa-float::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #25d366;
+    z-index: -1;
+    animation: wa-pulse 2.2s ease-out infinite;
+  }
+
+  .wa-float :global(.icon) {
+    width: 30px;
+    height: 30px;
+  }
+
+  @media (hover: hover) {
+    .wa-float:hover {
+      transform: scale(1.08) rotate(-8deg);
+    }
+  }
+
+  @keyframes wa-pulse {
+    0% {
+      transform: scale(1);
+      opacity: 0.6;
+    }
+    100% {
+      transform: scale(1.7);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wa-float::before {
+      animation: none;
+      display: none;
+    }
+  }
+
+  /* ---------- Cursor (só desktop com mouse) ---------- */
+
+  .cursor {
+    display: none;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    :global(.motion-ready) .cursor {
+      display: block;
+    }
+  }
+
+  .cursor__dot,
+  .cursor__ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    pointer-events: none;
+    border-radius: 50%;
+  }
+
+  .cursor__dot {
+    width: 6px;
+    height: 6px;
+    margin: -3px 0 0 -3px;
+    background: var(--sf-yellow-hot);
+  }
+
+  .cursor__ring {
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    transition:
+      width 0.35s var(--ease-out),
+      height 0.35s var(--ease-out),
+      margin 0.35s var(--ease-out),
+      background-color 0.35s,
+      border-color 0.35s;
+  }
+
+  .cursor.is-hover .cursor__ring {
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    background: rgba(242, 194, 0, 0.18);
+    border-color: var(--sf-yellow-hot);
+  }
+
+  .cursor.is-hidden {
+    opacity: 0;
+  }
+</style>

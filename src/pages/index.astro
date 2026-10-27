@@ -1,0 +1,42 @@
+---
+import Base from '../layouts/Base.astro';
+import Preloader from '../components/global/Preloader.astro';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import Extras from '../components/global/Extras.astro';
+import Hero from '../components/sections/Hero.astro';
+import Marquee from '../components/sections/Marquee.astro';
+import Sobre from '../components/sections/Sobre.astro';
+import Modalidades from '../components/sections/Modalidades.astro';
+import Estrutura from '../components/sections/Estrutura.astro';
+import Destaques from '../components/sections/Destaques.astro';
+import Planos from '../components/sections/Planos.astro';
+import Unidades from '../components/sections/Unidades.astro';
+import InstagramFeed from '../components/sections/InstagramFeed.astro';
+import Faq from '../components/sections/Faq.astro';
+import CtaFinal from '../components/sections/CtaFinal.astro';
+---
+
+<Base>
+  <Preloader />
+  <Header />
+  <main id="conteudo">
+    <Hero />
+    <Marquee />
+    <Sobre />
+    <Modalidades />
+    <Estrutura />
+    <Destaques />
+    <Planos />
+    <Unidades />
+    <InstagramFeed />
+    <Faq />
+    <CtaFinal />
+  </main>
+  <Footer />
+  <Extras />
+</Base>
+
+<script>
+  import '../scripts/main';
+</script>

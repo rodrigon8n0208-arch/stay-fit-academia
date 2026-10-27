@@ -1,0 +1,291 @@
+---
+import Logo from '../ui/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { NAV, SITE, whatsappUrl } from '../../data/site';
+---
+
+<header class="header" data-header>
+  <div class="header__bar container">
+    <a href="#topo" class="header__logo" aria-label="Stay Fit Academia — voltar ao início">
+      <Logo title="Stay Fit Academia" />
+    </a>
+
+    <nav class="header__nav" aria-label="Principal">
+      <ul>
+        {
+          NAV.map((item) => (
+            <li>
+              <a href={item.href} class="header__link">
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a href={SITE.studentPanelUrl} class="header__link header__link--panel" target="_blank" rel="noopener">
+            Área do aluno
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <a href={whatsappUrl()} class="btn header__cta" target="_blank" rel="noopener" data-magnetic>
+      <span class="btn__inner"><Icon name="whatsapp" /> Quero treinar</span>
+    </a>
+
+    <button
+      class="header__burger"
+      type="button"
+      aria-expanded="false"
+      aria-controls="menu-mobile"
+      data-menu-toggle
+    >
+      <span class="sr-only" data-menu-label>Abrir menu</span>
+      <span class="header__burger-line"></span>
+      <span class="header__burger-line"></span>
+    </button>
+  </div>
+</header>
+
+<div class="menu" id="menu-mobile" data-menu hidden>
+  <div class="menu__bg" data-menu-bg></div>
+  <nav class="menu__nav container" aria-label="Menu">
+    <ul>
+      {
+        NAV.map((item, i) => (
+          <li class="menu__item">
+            <a href={item.href} class="menu__link" data-menu-link>
+              <span class="menu__num">0{i + 1}</span>
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <div class="menu__foot" data-menu-link>
+      <a href={whatsappUrl()} class="btn" target="_blank" rel="noopener">
+        <span class="btn__inner"><Icon name="whatsapp" /> Chamar no WhatsApp</span>
+      </a>
+      <a href={SITE.studentPanelUrl} class="menu__ig" target="_blank" rel="noopener">
+        <Icon name="arrow-up-right" />
+        Área do aluno
+      </a>
+      <a href={SITE.instagram.url} class="menu__ig" target="_blank" rel="noopener">
+        <Icon name="instagram" />
+        {SITE.instagram.handle}
+      </a>
+    </div>
+  </nav>
+</div>
+
+<style>
+  .header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 100;
+    height: var(--header-h);
+    transition:
+      transform 0.45s var(--ease-out),
+      background-color 0.3s,
+      border-color 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+
+  .header.is-scrolled {
+    background: rgba(10, 10, 11, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .header.is-hidden {
+    transform: translateY(-100%);
+  }
+
+  .header__bar {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  .header__logo {
+    position: relative;
+    z-index: 2;
+    flex: none;
+  }
+
+  /* O logo da Stay Fit é mais alto (≈ 2:1), por isso a largura menor */
+  .header__logo :global(.logo) {
+    width: clamp(88px, 22vw, 108px);
+  }
+
+  .header__nav {
+    margin-left: auto;
+    display: none;
+  }
+
+  .header__nav ul {
+    display: flex;
+    gap: clamp(1rem, 2vw, 2rem);
+  }
+
+  .header__link {
+    position: relative;
+    display: inline-block;
+    padding-block: 0.5rem;
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.82);
+    transition: color 0.25s;
+  }
+
+  .header__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.2rem;
+    height: 2px;
+    background: var(--sf-yellow);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .header__link--panel {
+    color: var(--sf-yellow);
+    font-weight: 600;
+  }
+
+  @media (hover: hover) {
+    .header__link:hover {
+      color: var(--sf-white);
+    }
+    .header__link:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+  }
+
+  .header__cta {
+    display: none;
+    min-height: 44px;
+    padding: 0.6rem 1.2rem;
+    font-size: var(--fs-xs);
+  }
+
+  .header__burger {
+    position: relative;
+    z-index: 2;
+    margin-left: auto;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-content: center;
+    gap: 7px;
+    border-radius: 50%;
+    background: var(--sf-yellow);
+  }
+
+  .header__burger-line {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: var(--sf-on-accent);
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .header__burger[aria-expanded='true'] .header__burger-line:first-of-type {
+    transform: translateY(4.5px) rotate(45deg);
+  }
+
+  .header__burger[aria-expanded='true'] .header__burger-line:last-of-type {
+    transform: translateY(-4.5px) rotate(-45deg);
+  }
+
+  @media (min-width: 1024px) {
+    .header__nav,
+    .header__cta {
+      display: block;
+    }
+    .header__cta {
+      display: inline-flex;
+    }
+    .header__burger {
+      display: none;
+    }
+  }
+
+  /* ---------- Menu mobile (tela cheia) ---------- */
+
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    padding-top: var(--header-h);
+  }
+
+  .menu[hidden] {
+    display: none;
+  }
+
+  .menu__bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(100% 60% at 100% 0%, rgba(242, 194, 0, 0.22), transparent 60%),
+      var(--sf-black);
+  }
+
+  .menu__nav {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .menu__item {
+    overflow: hidden;
+  }
+
+  .menu__link {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.35rem;
+    font-size: clamp(2rem, 9vw, 3.25rem);
+    font-weight: 900;
+    font-stretch: 125%;
+    text-transform: uppercase;
+    line-height: 1.05;
+  }
+
+  .menu__num {
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    color: var(--sf-yellow-hot);
+    letter-spacing: 0.1em;
+  }
+
+  .menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1.25rem;
+  }
+
+  .menu__ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    color: var(--sf-muted);
+    font-size: var(--fs-sm);
+  }
+
+  .menu__ig :global(.icon) {
+    width: 20px;
+  }
+</style>

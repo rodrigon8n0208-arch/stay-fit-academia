@@ -1,0 +1,101 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '../styles/global.css';
+import fontLatin from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import { SITE, UNITS } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = `${SITE.name} | Academia em ${SITE.region} - ${SITE.state}`,
+  description = SITE.description,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og-image.jpg', Astro.site);
+const logo = new URL('/images/brand/logo-stay-fit.svg', Astro.site).href;
+
+// JSON-LD: a marca + uma ExerciseGym por unidade. Sem horários e sem aggregateRating
+// até confirmação (ver PENDENCIAS.md).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': `${canonical.href}#org`,
+      name: SITE.name,
+      url: canonical.href,
+      logo,
+      email: SITE.email,
+      sameAs: [SITE.instagram.url],
+    },
+    ...UNITS.map((u) => ({
+      '@type': 'ExerciseGym',
+      '@id': `${canonical.href}#${u.id}`,
+      name: u.name,
+      parentOrganization: { '@id': `${canonical.href}#org` },
+      url: canonical.href,
+      image: ogImage.href,
+      logo,
+      telephone: `+${u.whatsapp}`,
+      priceRange: 'R$ 74,90 – R$ 139,00 por mês',
+      address: {
+        '@type': 'PostalAddress',
+        streetAddress: u.street,
+        addressLocality: u.city,
+        addressRegion: u.state,
+        postalCode: u.postalCode,
+        addressCountry: 'BR',
+      },
+      sameAs: [SITE.instagram.url],
+    })),
+  ],
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0B0B0C" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Logo da Stay Fit Academia sobre foto de sala de musculação" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+    <!-- Marca o documento como "com JS". Se o script principal não iniciar em 4s,
+         remove a marca e o conteúdo aparece sem animação. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      setTimeout(function () {
+        if (!document.documentElement.classList.contains('motion-ready')) {
+          document.documentElement.classList.remove('js');
+        }
+      }, 4000);
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <slot />
+  </body>
+</html>

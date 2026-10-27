@@ -1,0 +1,242 @@
+---
+import Highlight from '../ui/Highlight.astro';
+import Icon from '../ui/Icon.astro';
+import { UNITS, SITE, modalidadeName, whatsappUrl } from '../../data/site';
+---
+
+<section class="section unidades" id="unidades" aria-labelledby="unidades-title">
+  <div class="container">
+    <div class="unidades__head">
+      <div>
+        <p class="eyebrow" data-reveal>Unidades</p>
+        <h2 class="display section-title" id="unidades-title" data-reveal-title>
+          <span class="thin">Duas unidades,</span><br />
+          <span class="bold">o mesmo <Highlight>pique</Highlight></span>
+        </h2>
+      </div>
+
+      <div class="switch" role="group" aria-label="Escolha a unidade" data-unit-switch-map>
+        {
+          UNITS.map((u, i) => (
+            <button type="button" class="switch__btn" aria-pressed={i === 0 ? 'true' : 'false'} data-unit={u.id}>
+              {u.short}
+            </button>
+          ))
+        }
+        <span class="switch__pill" aria-hidden="true" data-switch-pill></span>
+      </div>
+    </div>
+
+    {
+      UNITS.map((unit) => (
+        <div class="unit" data-unit-map={unit.id} role="region" aria-label={unit.name}>
+          <div class="unit__info">
+            <h3 class="unit__name">{unit.name}</h3>
+
+            <ul class="unit__list">
+              <li class="unit__item">
+                <Icon name="pin" />
+                <div>
+                  <p class="unit__label">Endereço</p>
+                  <address class="unit__value">
+                    {unit.street}
+                    <br />
+                    {unit.district}, {unit.city} - {unit.state}, {unit.postalCode}
+                  </address>
+                </div>
+              </li>
+              <li class="unit__item">
+                <Icon name="whatsapp" />
+                <div>
+                  <p class="unit__label">Telefone e WhatsApp</p>
+                  <a href={whatsappUrl(undefined, unit.whatsapp)} class="unit__value unit__link" target="_blank" rel="noopener">
+                    {unit.phone}
+                  </a>
+                </div>
+              </li>
+              <li class="unit__item">
+                <Icon name="check" />
+                <div>
+                  <p class="unit__label">Modalidades</p>
+                  <ul class="unit__chips">
+                    {unit.modalidades.map((m) => (
+                      <li>{modalidadeName(m)}</li>
+                    ))}
+                  </ul>
+                </div>
+              </li>
+            </ul>
+
+            <div class="unit__ctas">
+              <a href={unit.maps.directions} class="btn" target="_blank" rel="noopener" data-magnetic>
+                <span class="btn__inner">
+                  <Icon name="route" /> Como chegar
+                </span>
+              </a>
+              <a
+                href={whatsappUrl(`Olá! Vim pelo site e quero saber mais sobre a ${unit.name}.`, unit.whatsapp)}
+                class="btn btn--ghost"
+                target="_blank"
+                rel="noopener"
+                data-magnetic
+              >
+                <span class="btn__inner">
+                  <Icon name="whatsapp" /> WhatsApp
+                </span>
+              </a>
+            </div>
+          </div>
+
+          <div class="unit__map">
+            <iframe
+              src={unit.maps.embed}
+              title={`Mapa: ${unit.name}, ${unit.street}, ${unit.district}, ${unit.city} - ${unit.state}`}
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+            />
+          </div>
+        </div>
+      ))
+    }
+
+    <p class="unidades__more">
+      Também estamos no Instagram:
+      <a href={SITE.instagram.url} target="_blank" rel="noopener">{SITE.instagram.handle}</a>. E-mail:
+      <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .unidades__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .unit {
+    display: grid;
+    gap: 2.5rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .unit[hidden] {
+    display: none;
+  }
+
+  .unit__name {
+    font-size: var(--fs-xl);
+    font-weight: 900;
+    font-stretch: 125%;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .unit__list {
+    display: grid;
+    gap: 1.75rem;
+    margin-top: 2rem;
+  }
+
+  .unit__item {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .unit__item > :global(.icon) {
+    flex: none;
+    width: 26px;
+    margin-top: 0.15rem;
+    color: var(--sf-yellow);
+  }
+
+  .unit__label {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sf-muted);
+  }
+
+  .unit__value {
+    margin-top: 0.3rem;
+    font-style: normal;
+    font-size: var(--fs-md);
+  }
+
+  .unit__link {
+    display: inline-block;
+    text-decoration: underline;
+    text-decoration-color: var(--sf-yellow);
+    text-underline-offset: 4px;
+    text-decoration-thickness: 2px;
+  }
+
+  .unit__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.6rem;
+  }
+
+  .unit__chips li {
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+    background: var(--sf-card);
+    border: 1px solid var(--sf-line);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+
+  .unit__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 2.5rem;
+  }
+
+  .unit__map {
+    position: relative;
+    min-height: 360px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--sf-card);
+    border: 1px solid var(--sf-line);
+  }
+
+  .unit__map iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .unidades__more {
+    margin-top: 2.5rem;
+    font-size: var(--fs-sm);
+    color: var(--sf-muted);
+  }
+
+  .unidades__more a {
+    color: var(--sf-white);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--sf-yellow);
+    text-underline-offset: 4px;
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 1024px) {
+    .unit {
+      grid-template-columns: 0.9fr 1.1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+    .unit__map {
+      min-height: 520px;
+    }
+  }
+</style>

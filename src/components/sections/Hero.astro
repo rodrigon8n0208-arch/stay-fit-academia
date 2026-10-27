@@ -1,0 +1,295 @@
+---
+import { Picture } from 'astro:assets';
+import Highlight from '../ui/Highlight.astro';
+import Icon from '../ui/Icon.astro';
+import Logo from '../ui/Logo.astro';
+import { whatsappUrl } from '../../data/site';
+import { slot, fitWidths } from '../../data/images';
+
+const hero = slot('hero')!;
+---
+
+<section class="hero" id="topo" aria-labelledby="hero-title">
+  <div class="hero__glow" aria-hidden="true"></div>
+  <span class="ghost hero__ghost" aria-hidden="true" data-parallax="-0.25">Stay Fit</span>
+  <span class="led-line hero__led hero__led--1" aria-hidden="true" data-led></span>
+  <span class="led-line led-line--gold hero__led hero__led--2" aria-hidden="true" data-led></span>
+
+  <div class="hero__grid container">
+    <div class="hero__content">
+      <p class="eyebrow" data-hero-fade>Academia em Satuba e Maceió · AL</p>
+
+      <h1 class="display hero__title" id="hero-title">
+        <span class="sr-only">Stay Fit Academia, em Satuba e Maceió: treinar é um estilo de vida.</span>
+        <span class="hero__visual" aria-hidden="true">
+          <span class="hero__line thin" data-hero-split>Treinar é um</span>
+          <span class="hero__line bold">
+            <Highlight><span data-hero-split>estilo</span></Highlight>
+          </span>
+          <span class="hero__line bold" data-hero-split>de vida.</span>
+        </span>
+      </h1>
+
+      <p class="lead hero__lead" data-hero-fade>
+        Musculação, FitDance, boxe, muay thai e muito mais em duas unidades, com Espaço Kids e matrícula online.
+        Vem fazer parte do nosso time!
+      </p>
+
+      <div class="hero__ctas" data-hero-fade>
+        <a href={whatsappUrl()} class="btn" target="_blank" rel="noopener" data-magnetic>
+          <span class="btn__inner"><Icon name="whatsapp" /> Quero treinar</span>
+        </a>
+        <a href="#planos" class="btn btn--ghost" data-magnetic>
+          <span class="btn__inner">Ver planos <Icon name="arrow-right" /></span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__media" data-hero-media>
+      <div class="hero__frame brand-photo grain" data-parallax="0.12">
+        <!-- AVIF (mais leve) com WebP de reserva: a hero é o maior elemento da primeira tela (LCP) -->
+        <Picture
+          src={hero}
+          formats={['avif']}
+          fallbackFormat="webp"
+          alt="Atleta de costas levantando uma barra carregada na sala de musculação, com luzes amarelas ao fundo"
+          widths={fitWidths([480, 720, 1088, 1400], hero)}
+          sizes="(min-width: 1024px) 42vw, 92vw"
+          loading="eager"
+          fetchpriority="high"
+          class="hero__img"
+          data-hero-img
+        />
+      </div>
+
+      <div class="hero__badge" aria-hidden="true" data-hero-badge>
+        <svg viewBox="0 0 200 200" class="hero__badge-ring" data-badge-ring>
+          <defs>
+            <path id="badge-circle" d="M100,100 m-78,0 a78,78 0 1,1 156,0 a78,78 0 1,1 -156,0"></path>
+          </defs>
+          <text>
+            <textPath href="#badge-circle" startOffset="0">
+              STAY FIT • UM ESTILO DE VIDA • STAY FIT •
+            </textPath>
+          </text>
+        </svg>
+        <Logo variant="symbol" class="hero__badge-logo" title="" />
+      </div>
+    </div>
+  </div>
+
+  <div class="hero__info container" data-hero-fade>
+    <span class="hero__info-item"><Icon name="pin" /> Nova Satuba · Graciliano Ramos</span>
+    <span class="hero__info-item"><Icon name="check" /> Espaço Kids</span>
+    <span class="hero__info-item"><Icon name="check" /> Matrícula online</span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    padding-top: calc(var(--header-h) + 2rem);
+    padding-bottom: 1.5rem;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(70% 55% at 0% 0%, rgba(242, 194, 0, 0.26), transparent 70%),
+      radial-gradient(50% 40% at 100% 100%, rgba(140, 105, 0, 0.3), transparent 70%);
+  }
+
+  .hero__ghost {
+    top: 50%;
+    left: -2vw;
+    translate: 0 -50%;
+    font-size: clamp(6rem, 24vw, 26rem);
+    opacity: 0.6;
+  }
+
+  .hero__led {
+    width: 45vw;
+    z-index: -1;
+  }
+
+  .hero__led--1 {
+    top: 18%;
+    right: -5vw;
+    transform: rotate(-13deg);
+  }
+
+  .hero__led--2 {
+    bottom: 9%;
+    left: -10vw;
+    width: 35vw;
+    transform: rotate(-13deg);
+    opacity: 0.7;
+  }
+
+  .hero__grid {
+    position: relative;
+    display: grid;
+    gap: 2.5rem;
+    align-items: center;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero__title {
+    margin-top: 1.25rem;
+    font-size: clamp(3.1rem, 1.6rem + 6.4vw, 7.25rem);
+  }
+
+  .hero__visual {
+    display: block;
+  }
+
+  .hero__line {
+    display: block;
+    white-space: nowrap;
+  }
+
+  /* Como nas artes: linha fina menor, palavra de impacto grande */
+  .hero__line.thin {
+    font-size: 0.52em;
+    letter-spacing: 0.02em;
+  }
+
+  .hero__line + .hero__line {
+    margin-top: 0.08em;
+  }
+
+  .hero__lead {
+    margin-top: 1.75rem;
+  }
+
+  .hero__ctas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 2.25rem;
+  }
+
+  @media (max-width: 479px) {
+    .hero__ctas .btn {
+      width: 100%;
+      padding-inline: 1.1rem;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+  }
+
+  .hero__media {
+    position: relative;
+  }
+
+  .hero__frame {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius);
+    clip-path: polygon(6% 0, 100% 0, 94% 100%, 0 100%);
+    border-radius: 0;
+  }
+
+  .hero__frame :global(picture) {
+    display: contents;
+  }
+
+  .hero__frame :global(.hero__img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: var(--hero-pos, 70% 50%);
+    transform-origin: 60% 50%;
+  }
+
+  .hero__badge {
+    position: absolute;
+    right: 4%;
+    bottom: -2.5rem;
+    width: clamp(108px, 22vw, 168px);
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sf-black);
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+    z-index: 3;
+  }
+
+  .hero__badge-ring {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero__badge-ring text {
+    fill: var(--sf-white);
+    font-size: 13.5px;
+    font-weight: 700;
+    font-stretch: 125%;
+    letter-spacing: 0.14em;
+  }
+
+  .hero__badge :global(.hero__badge-logo) {
+    width: 46%;
+  }
+
+  .hero__info {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.75rem;
+    margin-top: 3.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--sf-line);
+    font-size: var(--fs-sm);
+    color: var(--sf-muted);
+  }
+
+  .hero__info-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero__info-item :global(.icon) {
+    width: 18px;
+    color: var(--sf-yellow-hot);
+  }
+
+  @media (min-width: 1024px) {
+    .hero {
+      padding-top: calc(var(--header-h) + 1rem);
+    }
+
+    .hero__grid {
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 3rem;
+    }
+
+    .hero__frame {
+      aspect-ratio: 4 / 5;
+    }
+
+    .hero__badge {
+      right: auto;
+      left: -3.5rem;
+      bottom: 8%;
+    }
+
+    .hero__info {
+      margin-top: 2.5rem;
+    }
+  }
+</style>

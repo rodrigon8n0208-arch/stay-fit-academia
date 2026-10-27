@@ -1,0 +1,133 @@
+---
+import Highlight from '../ui/Highlight.astro';
+import Icon from '../ui/Icon.astro';
+import { FAQ, whatsappUrl } from '../../data/site';
+---
+
+<section class="section faq" id="faq" aria-labelledby="faq-title">
+  <div class="container faq__grid">
+    <div class="faq__intro">
+      <p class="eyebrow" data-reveal>Dúvidas</p>
+      <h2 class="display section-title" id="faq-title" data-reveal-title>
+        <span class="thin">Perguntas</span><br />
+        <span class="bold"><Highlight>frequentes</Highlight></span>
+      </h2>
+      <p class="faq__more" data-reveal>
+        Não achou o que procurava?
+        <a href={whatsappUrl('Olá! Vim pelo site e tenho uma dúvida sobre a Stay Fit.')} target="_blank" rel="noopener">
+          Fale com a gente no WhatsApp
+        </a>.
+      </p>
+    </div>
+
+    <div class="faq__list" data-stagger>
+      {
+        FAQ.map((item) => (
+          <details class="faq__item" data-faq data-stagger-item>
+            <summary class="faq__q">
+              <span>{item.q}</span>
+              <span class="faq__icon" aria-hidden="true">
+                <Icon name="plus" />
+              </span>
+            </summary>
+            <div class="faq__a" data-faq-body>
+              <p>{item.a}</p>
+            </div>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq {
+    background: var(--sf-surface);
+  }
+
+  .faq__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .faq__more {
+    margin-top: 1.5rem;
+    color: var(--sf-muted);
+  }
+
+  .faq__more a {
+    color: var(--sf-white);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--sf-yellow);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 4px;
+  }
+
+  .faq__list {
+    border-top: 1px solid var(--sf-line);
+  }
+
+  .faq__item {
+    border-bottom: 1px solid var(--sf-line);
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    min-height: 64px;
+    padding-block: 1.25rem;
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__icon {
+    flex: none;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sf-card);
+    border: 1px solid var(--sf-line);
+    transition:
+      transform 0.45s var(--ease-out),
+      background-color 0.3s;
+  }
+
+  .faq__icon :global(.icon) {
+    width: 18px;
+  }
+
+  .faq__item[open] .faq__icon {
+    transform: rotate(135deg);
+    background: var(--sf-yellow);
+    border-color: var(--sf-yellow);
+    color: var(--sf-on-accent);
+  }
+
+  .faq__a {
+    overflow: hidden;
+  }
+
+  .faq__a p {
+    padding-bottom: 1.5rem;
+    max-width: 60ch;
+    color: var(--sf-muted);
+  }
+
+  @media (min-width: 1024px) {
+    .faq__grid {
+      grid-template-columns: 0.8fr 1.2fr;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+  }
+</style>

@@ -1,0 +1,102 @@
+---
+import Icon from '../ui/Icon.astro';
+import Logo from '../ui/Logo.astro';
+import { SITE, whatsappUrl } from '../../data/site';
+---
+
+<section class="cta" aria-labelledby="cta-title">
+  <Logo variant="symbol" class="cta__mark" title="" />
+  <div class="container cta__inner">
+    <h2 class="display cta__title" id="cta-title" data-reveal-title>
+      <span class="thin">Vem fazer parte</span><br />
+      <span class="bold">do nosso time.</span>
+    </h2>
+    <p class="cta__text" data-reveal>
+      Faça sua matrícula online ou chame a gente no WhatsApp. A Stay Fit é um estilo de vida, e ele começa hoje.
+    </p>
+    <div class="cta__btns">
+      <a href={whatsappUrl()} class="btn btn--dark cta__btn" target="_blank" rel="noopener" data-magnetic data-magnetic-strength="0.5">
+        <span class="btn__inner"><Icon name="whatsapp" /> Chamar no WhatsApp</span>
+      </a>
+      <a href={SITE.enrollUrl} class="btn cta__btn cta__btn--alt" target="_blank" rel="noopener" data-magnetic>
+        <span class="btn__inner">Matrícula online <Icon name="arrow-up-right" /></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    padding-block: clamp(6rem, 12vw, 11rem);
+    background:
+      radial-gradient(70% 90% at 100% 0%, var(--sf-yellow-hot), transparent 60%),
+      linear-gradient(160deg, var(--sf-yellow), #d9a900);
+    color: var(--sf-on-accent);
+    text-align: center;
+  }
+
+  .cta :global(.cta__mark) {
+    position: absolute;
+    z-index: -1;
+    right: -4%;
+    bottom: -12%;
+    width: clamp(260px, 42vw, 560px);
+    opacity: 0.1;
+  }
+
+  .cta :global(.cta__mark path) {
+    fill: #000;
+  }
+
+  .cta__inner {
+    display: grid;
+    justify-items: center;
+    gap: 1.75rem;
+  }
+
+  .cta__title {
+    font-size: clamp(2.2rem, 1rem + 5.4vw, 6rem);
+  }
+
+  .cta__text {
+    max-width: 46ch;
+    font-size: var(--fs-lg);
+  }
+
+  .cta__btns {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .cta__btn {
+    min-height: clamp(64px, 8vw, 84px);
+    padding-inline: clamp(1.75rem, 4vw, 3rem);
+    font-size: clamp(0.875rem, 0.7rem + 0.6vw, 1.125rem);
+  }
+
+  /* Botão secundário: contorno preto sobre o amarelo */
+  .cta__btn--alt {
+    --btn-bg: transparent;
+    box-shadow: inset 0 0 0 2px var(--sf-on-accent);
+  }
+
+  .cta__btn--alt::before {
+    background: var(--sf-on-accent);
+  }
+
+  @media (hover: hover) {
+    .cta__btn--alt:hover {
+      color: var(--sf-yellow);
+    }
+  }
+
+  .cta__btn :global(.icon) {
+    width: 1.5em;
+    height: 1.5em;
+  }
+</style>

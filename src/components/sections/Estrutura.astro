@@ -1,0 +1,360 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Highlight from '../ui/Highlight.astro';
+import Icon from '../ui/Icon.astro';
+import { whatsappUrl } from '../../data/site';
+import { slot, fitWidths } from '../../data/images';
+
+type Size = 'big' | 'wide' | 'small';
+type Tile = { slot: string; size: Size; caption: string; alt: string };
+
+// Cada bloco usa src/assets/img/site/<slot>.* (prompts em PROMPTS-IMAGENS.md)
+const tiles: Tile[] = [
+  { slot: 'galeria-01-musculacao', size: 'big', caption: 'Sala de musculação', alt: 'Sala de musculação ampla com máquinas pretas e detalhes amarelos' },
+  { slot: 'galeria-02-iluminacao', size: 'small', caption: 'Iluminação', alt: 'Teto preto com luminárias de LED' },
+  { slot: 'galeria-03-halteres', size: 'small', caption: 'Halteres', alt: 'Suporte com halteres pretos enfileirados' },
+  { slot: 'galeria-04-cardio', size: 'wide', caption: 'Área de cardio', alt: 'Fileira de esteiras na área de cardio' },
+  { slot: 'galeria-05-paineis', size: 'small', caption: 'Luz amarela', alt: 'Parede com iluminação amarela e equipamento de musculação' },
+  { slot: 'galeria-06-maquinas', size: 'small', caption: 'Máquinas', alt: 'Detalhe de máquina de musculação com estofado' },
+];
+
+const items = await Promise.all(
+  tiles
+    .map((t) => ({ ...t, src: slot(t.slot) }))
+    .filter((t) => t.src)
+    .map(async (t) => ({
+      ...t,
+      src: t.src!,
+      full: await getImage({ src: t.src!, width: Math.min(t.src!.width, 1600), format: 'webp' }),
+    }))
+);
+---
+
+<section class="section estrutura" id="estrutura" aria-labelledby="estrutura-title">
+  <span class="ghost estrutura__ghost" aria-hidden="true" data-parallax="0.2">Estrutura</span>
+
+  <div class="container">
+    <div class="estrutura__head">
+      <p class="eyebrow" data-reveal>Estrutura</p>
+      <h2 class="display section-title" id="estrutura-title" data-reveal-title>
+        <span class="thin">Estrutura com</span><br />
+        <span class="bold">a <Highlight>energia</Highlight> da Stay</span>
+      </h2>
+      <p class="lead" data-reveal>
+        Musculação, espaço para aulas e lutas e um ambiente iluminado, em preto e amarelo, que dá vontade de treinar.
+      </p>
+    </div>
+
+    <ul class="bento" data-gallery>
+      {
+        items.map((p, i) => (
+          <li class:list={['bento__item', `bento__item--${p.size}`]} data-gallery-item>
+            <a
+              href={p.full.src}
+              class="bento__link brand-photo grain"
+              data-lightbox-index={i}
+              data-full={p.full.src}
+              data-alt={p.alt}
+              data-caption={p.caption}
+              aria-label={`Ampliar foto: ${p.caption}`}
+            >
+              <Image
+                src={p.src}
+                alt={p.alt}
+                widths={fitWidths(p.size === 'small' ? [360, 640] : [480, 800, 1200], p.src)}
+                sizes={p.size === 'small' ? '(min-width: 1024px) 22vw, 46vw' : '(min-width: 1024px) 45vw, 92vw'}
+                class="bento__img"
+              />
+              <span class="bento__caption">{p.caption}</span>
+              <span class="bento__zoom" aria-hidden="true">
+                <Icon name="plus" />
+              </span>
+            </a>
+          </li>
+        ))
+      }
+      <li class="bento__item bento__item--wide bento__item--cta" data-gallery-item>
+        <div class="bento__cta">
+          <p class="bento__cta-title display">
+            <span class="thin">Venha</span> <span class="bold">conhecer</span>
+          </p>
+          <p class="bento__cta-text">Agende uma visita e veja a estrutura de perto.</p>
+          <a
+            href={whatsappUrl('Olá! Vim pelo site e quero agendar uma visita para conhecer a Stay Fit.')}
+            class="btn btn--dark"
+            target="_blank"
+            rel="noopener"
+            data-magnetic
+          >
+            <span class="btn__inner"><Icon name="whatsapp" /> Agendar visita</span>
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <dialog class="lightbox" data-lightbox aria-label="Galeria de fotos da estrutura">
+    <div class="lightbox__stage">
+      <img class="lightbox__img" src="" alt="" data-lightbox-img />
+      <p class="lightbox__caption" data-lightbox-caption></p>
+    </div>
+    <button class="lightbox__btn lightbox__close" type="button" data-lightbox-close aria-label="Fechar">
+      <Icon name="close" />
+    </button>
+    <button class="lightbox__btn lightbox__prev" type="button" data-lightbox-prev aria-label="Foto anterior">
+      <Icon name="chevron-left" />
+    </button>
+    <button class="lightbox__btn lightbox__next" type="button" data-lightbox-next aria-label="Próxima foto">
+      <Icon name="chevron-right" />
+    </button>
+  </dialog>
+</section>
+
+<style>
+  .estrutura {
+    overflow: hidden;
+  }
+
+  .estrutura__ghost {
+    top: 6%;
+    right: -6vw;
+  }
+
+  .estrutura__head {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 1.25rem;
+    max-width: 720px;
+  }
+
+  .estrutura__head .section-title {
+    margin-top: 0;
+  }
+
+  .bento {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: minmax(clamp(150px, 42vw, 220px), auto);
+    gap: 0.75rem;
+    margin-top: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .bento__item--big,
+  .bento__item--wide {
+    grid-column: span 2;
+  }
+
+  .bento__item--big {
+    grid-row: span 2;
+  }
+
+  .bento__link {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-sm);
+    cursor: zoom-in;
+  }
+
+  .bento__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+      transform 0.9s var(--ease-out),
+      filter 0.6s;
+    filter: saturate(0.9);
+  }
+
+  .bento__caption {
+    position: absolute;
+    left: 1rem;
+    bottom: 0.9rem;
+    z-index: 2;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    font-stretch: 125%;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .bento__zoom {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sf-yellow);
+    color: var(--sf-on-accent);
+    transform: scale(0.6);
+    opacity: 0;
+    transition:
+      transform 0.45s var(--ease-out),
+      opacity 0.3s;
+  }
+
+  .bento__zoom :global(.icon) {
+    width: 18px;
+  }
+
+  @media (hover: hover) {
+    .bento__link:hover .bento__img {
+      transform: scale(1.07);
+      filter: saturate(1.1);
+    }
+    .bento__link:hover .bento__zoom {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .bento__link:focus-visible .bento__zoom {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  .bento__cta {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    border-radius: var(--radius-sm);
+    background:
+      radial-gradient(80% 100% at 100% 0%, var(--sf-yellow-hot), transparent 60%),
+      var(--sf-yellow);
+    color: var(--sf-on-accent);
+  }
+
+  .bento__cta-title {
+    font-size: var(--fs-xl);
+  }
+
+  .bento__cta-text {
+    font-size: var(--fs-sm);
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .bento {
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: clamp(180px, 16vw, 250px);
+    }
+  }
+
+  /* ---------- Lightbox ---------- */
+
+  .lightbox {
+    width: 100vw;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--sf-white);
+    overflow: hidden;
+  }
+
+  .lightbox::backdrop {
+    background: rgba(10, 10, 11, 0.94);
+    backdrop-filter: blur(6px);
+  }
+
+  .lightbox__stage {
+    position: absolute;
+    inset: 4.5rem 1rem 4.5rem;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 1rem;
+  }
+
+  .lightbox__img {
+    max-width: min(100%, 1200px);
+    max-height: calc(100dvh - 12rem);
+    width: auto;
+    height: auto;
+    border-radius: var(--radius-sm);
+    object-fit: contain;
+  }
+
+  .lightbox__caption {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    font-stretch: 125%;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--sf-muted);
+  }
+
+  .lightbox__btn {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--sf-card);
+    border: 1px solid var(--sf-line);
+    transition: background-color 0.25s;
+  }
+
+  .lightbox__btn :global(.icon) {
+    width: 22px;
+  }
+
+  @media (hover: hover) {
+    .lightbox__btn:hover {
+      background: var(--sf-yellow);
+      color: var(--sf-on-accent);
+    }
+  }
+
+  .lightbox__close {
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .lightbox__prev,
+  .lightbox__next {
+    bottom: 1rem;
+  }
+
+  .lightbox__prev {
+    left: calc(50% - 60px);
+  }
+
+  .lightbox__next {
+    right: calc(50% - 60px);
+  }
+
+  @media (min-width: 768px) {
+    .lightbox__prev,
+    .lightbox__next {
+      bottom: auto;
+      top: 50%;
+      translate: 0 -50%;
+    }
+    .lightbox__prev {
+      left: 1.5rem;
+    }
+    .lightbox__next {
+      right: 1.5rem;
+    }
+    .lightbox__stage {
+      inset: 4.5rem 6rem;
+    }
+  }
+</style>

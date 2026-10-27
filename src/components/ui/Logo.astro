@@ -1,0 +1,44 @@
+---
+import { LOGO } from '../../data/logo-paths';
+
+interface Props {
+  /** full = logo completo; symbol = só o boneco levantando a barra */
+  variant?: 'full' | 'symbol';
+  /** cor de "Stay" e "academia" */
+  tone?: 'light' | 'dark';
+  class?: string;
+  title?: string;
+}
+
+const { variant = 'full', tone = 'light', class: className, title = 'Stay Fit Academia' } = Astro.props;
+const fg = tone === 'light' ? '#FFFFFF' : '#0B0B0C';
+const yellow = '#F2C200';
+const isFull = variant === 'full';
+// title="" = uso decorativo (escondido de leitores de tela)
+const a11y = title ? ({ role: 'img', 'aria-label': title } as const) : ({ 'aria-hidden': 'true' } as const);
+---
+
+<!-- fill-rule="evenodd" mantém vazados os miolos das letras (a, d, e…), que são contornos internos -->
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox={isFull ? LOGO.viewBox : LOGO.symbolViewBox}
+  class:list={['logo', `logo--${variant}`, className]}
+  fill-rule="evenodd"
+  {...a11y}
+>
+  <path class="logo__symbol" fill={yellow} fill-rule="evenodd" d={LOGO.symbol}></path>
+  {
+    isFull && (
+      <>
+        <path class="logo__light" fill={fg} fill-rule="evenodd" d={LOGO.light} />
+        <path class="logo__word" fill={yellow} fill-rule="evenodd" d={LOGO.word} />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  .logo {
+    height: auto;
+  }
+</style>

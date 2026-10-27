@@ -1,0 +1,173 @@
+---
+import Logo from '../ui/Logo.astro';
+import Icon from '../ui/Icon.astro';
+import { NAV, SITE, UNITS, whatsappUrl } from '../../data/site';
+---
+
+<footer class="footer">
+  <div class="container footer__grid">
+    <div class="footer__brand">
+      <Logo class="footer__logo" />
+      <p class="footer__tagline">Um estilo de vida. Musculação e muito mais em Satuba e Maceió.</p>
+    </div>
+
+    <nav class="footer__col" aria-label="Rodapé">
+      <p class="footer__title">Navegue</p>
+      <ul>
+        {
+          NAV.map((n) => (
+            <li>
+              <a href={n.href}>{n.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    {
+      UNITS.map((u) => (
+        <div class="footer__col">
+          <p class="footer__title">{u.name}</p>
+          <ul>
+            <li class="footer__addr">
+              <Icon name="pin" />
+              <span>
+                {u.street}
+                <br />
+                {u.district}, {u.city} - {u.state}
+              </span>
+            </li>
+            <li>
+              <a href={whatsappUrl(undefined, u.whatsapp)} target="_blank" rel="noopener">
+                <Icon name="whatsapp" /> {u.phone}
+              </a>
+            </li>
+          </ul>
+        </div>
+      ))
+    }
+
+    <div class="footer__col">
+      <p class="footer__title">Online</p>
+      <ul>
+        <li>
+          <a href={SITE.enrollUrl} target="_blank" rel="noopener"><Icon name="arrow-up-right" /> Matrícula online</a>
+        </li>
+        <li>
+          <a href={SITE.studentPanelUrl} target="_blank" rel="noopener"><Icon name="arrow-up-right" /> Área do aluno</a>
+        </li>
+        <li>
+          <a href={SITE.instagram.url} target="_blank" rel="noopener"><Icon name="instagram" /> {SITE.instagram.handle}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="container footer__bottom">
+    <p>© <span data-year>{new Date().getFullYear()}</span> {SITE.name}. Todos os direitos reservados.</p>
+    <a href="#topo" class="footer__top">Voltar ao topo ↑</a>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding-top: clamp(4rem, 8vw, 6rem);
+    background: var(--sf-black);
+    border-top: 1px solid var(--sf-line);
+    font-size: var(--fs-sm);
+  }
+
+  .footer__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  .footer :global(.footer__logo) {
+    width: 150px;
+  }
+
+  .footer__tagline {
+    margin-top: 1.25rem;
+    max-width: 32ch;
+    color: var(--sf-muted);
+  }
+
+  .footer__title {
+    margin-bottom: 1rem;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    font-stretch: 125%;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  .footer__col ul {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--sf-muted);
+  }
+
+  .footer__col a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 32px;
+    transition: color 0.25s;
+  }
+
+  @media (hover: hover) {
+    .footer__col a:hover {
+      color: var(--sf-white);
+    }
+  }
+
+  .footer__col :global(.icon) {
+    width: 18px;
+    flex: none;
+    color: var(--sf-yellow-hot);
+  }
+
+  .footer__addr {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.3rem;
+  }
+
+  .footer__addr :global(.icon) {
+    margin-top: 0.2rem;
+  }
+
+  .footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: clamp(3rem, 6vw, 4.5rem);
+    padding-block: 1.5rem calc(1.5rem + 72px);
+    border-top: 1px solid var(--sf-line);
+    font-size: var(--fs-xs);
+    color: var(--sf-muted);
+  }
+
+  .footer__top {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+  }
+
+  @media (min-width: 768px) {
+    .footer__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .footer__bottom {
+      padding-bottom: 1.5rem;
+      padding-right: calc(var(--gutter) + 80px);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .footer__grid {
+      grid-template-columns: 1.3fr repeat(4, 1fr);
+    }
+  }
+</style>

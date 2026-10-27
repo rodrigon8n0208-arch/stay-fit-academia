@@ -1,0 +1,13 @@
+---
+// Palavra com faixa vermelha atrás (assinatura visual das artes da marca).
+// A faixa é um elemento próprio para poder ser animada (scaleX) pelo GSAP.
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<span class:list={['hl', className]} data-hl>
+  <span class="hl__bg" aria-hidden="true"></span>
+  <span class="hl__txt"><slot /></span>
+</span>
